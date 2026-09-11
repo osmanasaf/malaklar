@@ -40,8 +40,19 @@ Her şey **`app.js`**'in en üstündeki `İÇERİK` bloğunda:
 
 ### Fotoğraflar
 
-Kartlardaki boş yuvaya bir resim **sürükleyip bırak** — tarayıcında (`localStorage`) kalır.
-Herkeste görünmesini istiyorsan dosyayı depoya koyup `app.js`'te kart görselini oradan ver.
+Depoya şu iki dosyayı koy, **iki site birden** otomatik yakalar — kod değiştirmene gerek yok:
+
+```
+anatomi/assets/slay.jpg     ← Sıla
+anatomi/assets/0k4n.jpg     ← Okan
+```
+
+- Uzantı fark etmez: `.jpg`, `.jpeg`, `.png`, `.webp` sırayla denenir.
+- Ana sayfa kendi klasörünü de kullanabilir: `assets/sila.*`, `assets/okan.*` (varsa bunlar öncelikli).
+- Foto yoksa site bozulmaz: kartta "sürükle bırak" yer tutucusu, laboratuvarda "GÖRSEL BEKLENİYOR" görünür.
+- **En iyi sonuç:** kare-ish, yüzün ortada olduğu bir portre. Laboratuvar görseli kafa kapsülüne kırpar, röntgen efektini CSS uygular — önceden düzenlemene gerek yok.
+
+Sadece kendi tarayıcında denemek istersen kartın boş yuvasına bir resim sürükleyip bırakabilirsin; o foto `localStorage`'da kalır, başkasına görünmez.
 
 ---
 

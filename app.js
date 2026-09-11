@@ -9,6 +9,9 @@ const MALAKLAR = [
   {
     id: "sila",
     ad: "SILA",
+    // Repoya bu adlardan biriyle foto koy, otomatik yakalanır (ilk bulunan kazanır)
+    fotolar: ["assets/sila.jpg", "assets/sila.jpeg", "assets/sila.png", "assets/sila.webp",
+              "anatomi/assets/slay.jpg", "anatomi/assets/slay.jpeg", "anatomi/assets/slay.png", "anatomi/assets/slay.webp"],
     unvan: "Kısmetse Olur",
     ozet: "Her plana “kısmetse olur” der, kısmet olmaz. Takvimde “izliyorum” yazan on dört etkinlik var, hiçbirine gidilmedi.",
     alinti: "Kısmetse olur, izliyorum.",
@@ -32,6 +35,9 @@ const MALAKLAR = [
   {
     id: "okan",
     ad: "OKAN",
+    fotolar: ["assets/okan.jpg", "assets/okan.jpeg", "assets/okan.png", "assets/okan.webp",
+              "anatomi/assets/0k4n.jpg", "anatomi/assets/0k4n.jpeg", "anatomi/assets/0k4n.png", "anatomi/assets/0k4n.webp",
+              "anatomi/assets/okan.jpg", "anatomi/assets/okan.jpeg", "anatomi/assets/okan.png"],
     unvan: "Bugün Ne Yiyecez",
     ozet: "Günü “bugün ne yiyecez” ile açar, “çok pahalıymış la” ile kapatır. Arada bir yerde bir MR çektirmiştir.",
     alinti: "Bugün ne yiyecez?",
@@ -176,13 +182,35 @@ function fotoYaz(id, veri) {
   try { localStorage.setItem(FOTO_ANAHTAR(id), veri); } catch { /* kota dolu olabilir, önemsiz */ }
 }
 
+// Aday yolları sırayla dener, ilk yüklenen kazanır; hiçbiri yoksa null döner.
+function ilkBulunanFoto(yollar) {
+  return new Promise((cevapla) => {
+    const liste = yollar ? yollar.slice() : [];
+    const dene = () => {
+      const yol = liste.shift();
+      if (!yol) return cevapla(null);
+      const im = new Image();
+      im.onload = () => cevapla(yol);
+      im.onerror = dene;
+      im.src = yol;
+    };
+    dene();
+  });
+}
+
 function fotoYuvasiBagla(yuva, malak) {
   const goster = (veri) => {
     yuva.innerHTML = veri
       ? `<img src="${veri}" alt="${malak.ad}">`
       : `<span class="foto-bos">${malak.ad} fotosu<br>sürükle bırak</span>`;
   };
-  goster(fotoOku(malak.id));
+
+  // Öncelik: kullanıcının kendi sürüklediği foto > repodaki foto > yer tutucu
+  const yerel = fotoOku(malak.id);
+  goster(yerel);
+  if (!yerel) ilkBulunanFoto(malak.fotolar).then((yol) => {
+    if (yol && !fotoOku(malak.id)) goster(yol);
+  });
 
   const dosyaOku = (dosya) => {
     if (!dosya || !dosya.type.startsWith("image/")) return;
