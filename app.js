@@ -183,8 +183,12 @@ function fotoYaz(id, veri) {
 }
 
 // Aday yolları sırayla dener, ilk yüklenen kazanır; hiçbiri yoksa null döner.
+// Sonuç önbelleğe alınır — kart her yeniden çizildiğinde tekrar yoklanmasın.
+const fotoOnbellek = new Map();
 function ilkBulunanFoto(yollar) {
-  return new Promise((cevapla) => {
+  const anahtar = (yollar || []).join("|");
+  if (fotoOnbellek.has(anahtar)) return fotoOnbellek.get(anahtar);
+  const sonuc = new Promise((cevapla) => {
     const liste = yollar ? yollar.slice() : [];
     const dene = () => {
       const yol = liste.shift();
@@ -196,6 +200,8 @@ function ilkBulunanFoto(yollar) {
     };
     dene();
   });
+  fotoOnbellek.set(anahtar, sonuc);
+  return sonuc;
 }
 
 function fotoYuvasiBagla(yuva, malak) {
