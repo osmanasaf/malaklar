@@ -129,6 +129,22 @@
         <div class="ana-soz-metin" id="anaSozMetin"></div>
         <div class="ana-soz-kim" id="anaSozKim"></div>
       </div>
+      <div class="soz-ekle">
+        <div class="soz-ekle-basi">
+          <span class="soz-ekle-baslik">DUVARA SÖZ AS</span>
+          <span class="soz-durum" id="sozDurum">bağlanıyor…</span>
+        </div>
+        <form class="soz-form" id="sozForm" autocomplete="off">
+          <div class="kim-sec" role="group" aria-label="Kim söyledi">
+            <button type="button" class="kim-btn secili" data-kim="sila">SILA</button>
+            <button type="button" class="kim-btn" data-kim="okan">OKAN</button>
+          </div>
+          <input type="text" id="sozMetin" class="soz-girdi" maxlength="200"
+                 placeholder="Ne dedi? Aynen yaz." required>
+          <button type="submit" class="soz-gonder" id="sozGonder">DUVARA AS</button>
+        </form>
+      </div>
+
       <div class="soz-izgara" id="sozIzgara"></div>
     </div>
   </section>
@@ -166,6 +182,7 @@
 
 </div>
 
+<script src="./firebase-config.js"></script>
 <script src="./app.js"></script>
 </body>
 </html>

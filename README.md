@@ -24,6 +24,24 @@ Depoda iki ayrı site var:
 - **TEHLİKELİ BÖLGE** — kaçan buton, malak çoğaltma, "gerçeği söyle" çıktısı.
 - **Okan'ın baloncukları** — sayfada durmadan ağzından bir şey fırlar (AKIR, BOHOHOHOYT, DÖNER Mİ YESEK…). Üstteki mavi sayaç her baloncukta artar.
 - **GRUBU DAĞIT** — tüm sayfayı sarsar.
+- **DUVARA SÖZ AS** — siteden söz eklenir: Sıla/Okan seç, cümleyi yaz, as. Ortak duvar açıksa herkeste anında görünür.
+
+### Ortak söz duvarı
+
+Söz ekleme kutusu her hâlükârda çalışır, ama nereye yazdığı ayara bağlı:
+
+| Durum | Ne olur |
+|---|---|
+| `firebase-config.js` **dolu** | Söz ortak duvara gider, siteyi açan herkes anında görür (sayfa yenilemeye gerek yok) |
+| `firebase-config.js` **boş** | Söz sadece ekleyenin tarayıcısında kalır; kutunun yanında bunu söyleyen bir uyarı çıkar |
+
+Ortak duvarı açmak için **[`firebase-config.js`](firebase-config.js)** dosyasını aç — kurulum adımları (ücretsiz Firebase projesi + yapıştırılacak güvenlik kuralları) dosyanın içinde yazılı.
+
+Notlar:
+- Güvenlik kuralları ekleme yapılmasına izin verir, **silmeye/değiştirmeye izin vermez**. İstenmeyen bir söz çıkarsa Firebase konsolundan (Firestore → `sozler`) silersin.
+- Söz metni 200 karakterle sınırlı, aynı kişi 4 saniyede bir ekleyebilir.
+- Girilen metin ekrana basılmadan kaçışlanır; kimse siteye kod sokamaz.
+- `firebase-config.js`'teki `apiKey` gizli bir şifre değildir, herkese açık olması normaldir — güvenlik kurallarla sağlanır.
 
 ### Metinleri değiştirmek
 
@@ -37,6 +55,8 @@ Her şey **`app.js`**'in en üstündeki `İÇERİK` bloğunda:
 | `GERCEKLER` | "GERÇEĞİ SÖYLE" çıktıları |
 | `OKAN_BALONCUK` | Baloncuklarda çıkacak laflar |
 | `SERIT_UST` / `SERIT_ALT` | Kayan şeritler |
+
+Siteden eklenen sözler `ALINTILAR`'a dokunmaz — duvarda en üstte, "DUVARDAN" rozetiyle görünür.
 
 ### Fotoğraflar
 

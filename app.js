@@ -346,21 +346,140 @@ $("#duelloAlan").addEventListener("click", (e) => {
 
 /* ---------- söz duvarı ---------- */
 let sozIdx = 0;
+let eklenenler = [];          // ortak duvardan / yerelden gelen sözler
+let duvaraYaz = null;         // Firestore'a yazan fonksiyon; yoksa yerel mod
+const KIM_AD = { sila: "Sıla", okan: "Okan" };
+
+// Kullanıcı metni HTML'e basılmadan önce kaçışlanır.
+const kacisli = (m) => String(m).replace(/[&<>"']/g, (c) =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+const tumSozler = () => eklenenler.concat(ALINTILAR);
 
 function sozleriCiz() {
-  $("#sozIzgara").innerHTML = ALINTILAR.map((a) => `
+  const eklenenKart = (a) => `
+    <div class="soz-kart eklenen">
+      <div class="soz-metin">“${kacisli(a.metin)}”</div>
+      <div class="soz-kim">${kacisli(a.kim)}<span class="soz-rozet">DUVARDAN</span></div>
+    </div>`;
+  const sabitKart = (a) => `
     <div class="soz-kart">
       <div class="soz-metin">“${a.metin}”</div>
       <div class="soz-kim">${a.kim}</div>
-    </div>`).join("");
+    </div>`;
+  $("#sozIzgara").innerHTML =
+    eklenenler.map(eklenenKart).join("") + ALINTILAR.map(sabitKart).join("");
   anaSozuCiz();
 }
 
 function anaSozuCiz() {
-  const a = ALINTILAR[sozIdx];
+  const liste = tumSozler();
+  const a = liste[sozIdx % liste.length];
   $("#anaSozMetin").textContent = `“${a.metin}”`;
   $("#anaSozKim").textContent = "— " + a.kim;
 }
+
+/* ---------- ortak duvar: Firebase varsa ortak, yoksa yerel ---------- */
+const YEREL_ANAHTAR = "malaklar.sozler";
+
+function yerelOku() {
+  try { return JSON.parse(localStorage.getItem(YEREL_ANAHTAR) || "[]"); } catch { return []; }
+}
+function yerelYaz(liste) {
+  try { localStorage.setItem(YEREL_ANAHTAR, JSON.stringify(liste)); } catch { /* kota */ }
+}
+
+function durumYaz(metin, sinif) {
+  const el = $("#sozDurum");
+  el.textContent = metin;
+  el.className = "soz-durum" + (sinif ? " " + sinif : "");
+}
+
+function yerelModaGec(sebep) {
+  eklenenler = yerelOku();
+  duvaraYaz = (metin, kim) => {
+    const liste = [{ metin, kim: KIM_AD[kim] }].concat(yerelOku());
+    yerelYaz(liste);
+    eklenenler = liste;
+    return Promise.resolve();
+  };
+  durumYaz(sebep || "ortak duvar kapalı — eklediğin söz sadece sende görünür", "kotu");
+  sozleriCiz();
+}
+
+async function duvariBagla() {
+  const cfg = window.MALAKLAR_FIREBASE;
+  const kurulu = cfg && Object.values(cfg).every((v) => v && !String(v).includes("BURAYA"));
+  if (!kurulu) { yerelModaGec(); return; }
+
+  try {
+    const s = "https://www.gstatic.com/firebasejs/10.12.2/";
+    const [{ initializeApp }, fs] = await Promise.all([
+      import(s + "firebase-app.js"),
+      import(s + "firebase-firestore.js")
+    ]);
+    const db = fs.getFirestore(initializeApp(cfg));
+    const kol = fs.collection(db, "sozler");
+
+    fs.onSnapshot(
+      fs.query(kol, fs.orderBy("zaman", "desc"), fs.limit(200)),
+      (anlik) => {
+        eklenenler = anlik.docs.map((d) => {
+          const v = d.data();
+          return { metin: v.metin, kim: KIM_AD[v.kim] || v.kim };
+        });
+        sozleriCiz();
+        durumYaz(eklenenler.length
+          ? `ortak duvar bağlı — ${eklenenler.length} söz asılı`
+          : "ortak duvar bağlı — ilk sözü sen as", "iyi");
+      },
+      () => yerelModaGec("duvara bağlanılamadı — eklediğin söz sadece sende görünür")
+    );
+
+    duvaraYaz = (metin, kim) =>
+      fs.addDoc(kol, { metin, kim, zaman: fs.serverTimestamp() });
+  } catch {
+    yerelModaGec("duvara bağlanılamadı — eklediğin söz sadece sende görünür");
+  }
+}
+
+/* ---------- ekleme formu ---------- */
+let seciliKim = "sila";
+let sonGonderim = 0;
+
+document.querySelectorAll(".kim-btn").forEach((b) => {
+  b.addEventListener("click", () => {
+    seciliKim = b.dataset.kim;
+    document.querySelectorAll(".kim-btn").forEach((d) => d.classList.toggle("secili", d === b));
+  });
+});
+
+$("#sozForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const girdi = $("#sozMetin");
+  const btn = $("#sozGonder");
+  const metin = girdi.value.trim().slice(0, 200);
+  if (!metin) return;
+
+  if (Date.now() - sonGonderim < 4000) { durumYaz("biraz yavaş. dört saniye bekle.", "kotu"); return; }
+  if (!duvaraYaz) { durumYaz("duvar hazır değil, bir saniye", "kotu"); return; }
+
+  btn.disabled = true;
+  durumYaz("asılıyor…");
+  try {
+    await duvaraYaz(metin, seciliKim);
+    sonGonderim = Date.now();
+    girdi.value = "";
+    sozIdx = 0;
+    sozleriCiz();
+    durumYaz("asıldı. geri alınamaz.", "iyi");
+    if (seciliKim === "okan") baloncukPatlamasi(4);
+  } catch {
+    durumYaz("gitmedi. tekrar dene.", "kotu");
+  } finally {
+    btn.disabled = false;
+  }
+});
 
 /* ---------- imleç takibi ---------- */
 (function imlecKur() {
@@ -462,6 +581,7 @@ dosyayiCiz();
 duelloyuCiz();
 sozleriCiz();
 trollYaz("Hazır. Bir şeye bas, ne olacağını ikimiz de biliyoruz.");
+duvariBagla();
 
 // sayaçlar sürekli artsın
 setInterval(() => {
@@ -476,7 +596,7 @@ setInterval(() => {
 
 // söz duvarı dönsün
 setInterval(() => {
-  sozIdx = (sozIdx + 1) % ALINTILAR.length;
+  sozIdx = (sozIdx + 1) % tumSozler().length;
   anaSozuCiz();
 }, 4200);
 
