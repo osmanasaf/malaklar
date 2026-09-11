@@ -43,6 +43,22 @@ window.MALAKLAR = [
         wound: true
       },
       {
+        organ: "KISMET BEZİ",
+        latin: "Glandula fortuna",
+        side: "left", x: 50, y: 66,
+        text: "Kısmetse olur, izliyorum.",
+        note: "Takvimde 'izliyorum' işaretli 14 etkinlik var. Katılım: 0. Kısmet hâlâ bekleniyor.",
+        level: 7
+      },
+      {
+        organ: "SCOPE DEĞİŞTİRME REFLEKSİ",
+        latin: "Reflexus scopalis",
+        side: "right", x: 50, y: 30,
+        text: "Scopeee changeee!",
+        note: "Konuşmanın tam ortasında devreye girer. Konu oracıkta kapanır, itiraz eden olmaz.",
+        level: 96
+      },
+      {
         organ: "KAHKAHA KORTEKSİ",
         latin: "Cortex okanensis",
         side: "right", x: 50, y: 17,
@@ -56,7 +72,8 @@ window.MALAKLAR = [
       { label: "Yardım kabul etme",       value: 0   },
       { label: "Kedi karşısında güç",     value: 4   },
       { label: "Sokak hayvanı radarı",    value: 96  },
-      { label: "Okan'a gülme kapasitesi", value: 240 }
+      { label: "Okan'a gülme kapasitesi", value: 240 },
+      { label: "Kısmet oranı",               value: 7   }
     ],
     verdict: "Kronik Bağımsızlık Sendromu tespit edildi. Hastanın bağışıklık sistemi 'yardım' kelimesini virüs olarak tanıyor. Tedavi mevcut değil; zaten hasta tedaviyi de reddetti. Kedilerden uzak durması önerilir."
   },
@@ -87,8 +104,24 @@ window.MALAKLAR = [
         latin: "Fabrica verborum",
         side: "left", x: 50, y: 30,
         text: "Götten kelime uydurup herkese yayarım.",
-        note: "Üretim: 47 kelime. TDK'da kayıtlı olan: 0. Yayılma hızı: grip.",
+        note: "Üretim: 47 kelime. TDK'da kayıtlı olan: 0. Yayılma hızı: grip. Amiral gemisi: 'akır' — anlamı ne soruldu ne açıklandı.",
         level: 100
+      },
+      {
+        organ: "ÖĞÜN PLANLAMA ÇEKİRDEĞİ",
+        latin: "Nucleus doneri",
+        side: "left", x: 50, y: 66,
+        text: "Bugün ne yiyecez? Döner mi yesek?",
+        note: "Soru saati 10.40, kahvaltı hâlâ masada. Önerilen çözüm her seferinde aynı: döner. Fiyatı görünce: 'çok pahalıymış la'.",
+        level: 97
+      },
+      {
+        organ: "BOHOHOHOYT REZONATÖRÜ",
+        latin: "Resonator bohoyticus",
+        side: "right", x: 44, y: 47,
+        text: "BOHOHOHOYT",
+        note: "Sebep yok, uyarı yok, bağlam yok. Ölçülen ses: 91 dB. Odadaki herkes yerinden sıçradı.",
+        level: 91
       },
       {
         organ: "ARIZALI GÖRÜŞ MODÜLÜ",
@@ -105,7 +138,8 @@ window.MALAKLAR = [
       { label: "Basket isabeti",          value: 12  },
       { label: "Öz güven",                value: 340 },
       { label: "Fikirlerin güncelliği",   value: 3   },
-      { label: "Ses yüksekliği",          value: 91  }
+      { label: "Ses yüksekliği",          value: 91  },
+      { label: "Günlük 'ne yiyecez'",      value: 97  }
     ],
     verdict: "Konuşma merkezi ile düşünme merkezi arasındaki kablo kopuk. Ağız, beynin onayını beklemeden yayın yapıyor. Görüş modülü fabrika ayarlarına döndürülmeli. Öneri: fişi çek, 100 yıl bekle, tekrar tak."
   }
