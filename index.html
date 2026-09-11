@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MALAK ANATOMİ LABORATUVARI</title>
+<meta name="description" content="Deneklerin tam vücut taraması. Bilimsel değildir. Merhametli hiç değildir.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩻</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ══ ARKA PLAN KATMANLARI ══ -->
+<div class="fx-grid" aria-hidden="true"></div>
+<canvas id="dust" class="fx-dust" aria-hidden="true"></canvas>
+<div class="fx-scan" aria-hidden="true"></div>
+<div class="fx-vignette" aria-hidden="true"></div>
+
+<!-- ══ AÇILIŞ TERMİNALİ ══ -->
+<div id="boot" class="boot">
+  <div class="boot-box">
+    <div class="boot-head">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      <span class="boot-title">malak-os // çekirdek</span>
+    </div>
+    <pre id="bootLog" class="boot-log"></pre>
+    <div class="boot-bar"><i id="bootBar"></i></div>
+    <div class="boot-skip">geçmek için tıkla</div>
+  </div>
+</div>
+
+<!-- ══ ÜST BAR ══ -->
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">🩻</span>
+    <span class="brand-txt">MALAK<b>LAB</b></span>
+    <span class="brand-ver">v2.6</span>
+  </div>
+  <div class="topbar-right">
+    <span class="rec"><i></i>REC</span>
+    <button id="sndBtn" class="icon-btn" type="button" aria-pressed="true" title="Ses aç/kapat">🔊</button>
+  </div>
+</header>
+
+<!-- ══ DENEK SEÇİM EKRANI ══ -->
+<main id="select" class="select">
+  <h1 class="title glitch" data-text="ANATOMİ LABORATUVARI">ANATOMİ LABORATUVARI</h1>
+  <p class="subtitle">
+    <span class="blink">▌</span> DENEK SEÇİNİZ &mdash; tam vücut taraması başlatılacak
+  </p>
+
+  <div class="cards" id="cards"><!-- JS dolduruyor --></div>
+
+  <p class="hint">bir denek seç &rarr; tarama otomatik başlar &nbsp;•&nbsp; <kbd>ESC</kbd> ile geri dön</p>
+</main>
+
+<!-- ══ LABORATUVAR / TARAMA EKRANI ══ -->
+<section id="lab" class="lab" hidden aria-live="polite">
+
+  <div class="lab-head">
+    <div class="lab-id">
+      <span class="lab-chip" id="labChip">SLY-001</span>
+      <h2 class="lab-name" id="labName">SLAY</h2>
+      <p class="lab-sub" id="labSub">denek</p>
+    </div>
+    <div class="lab-meta">
+      <div class="meta-row"><span>DURUM</span><b id="phaseTxt">HAZIRLANIYOR</b></div>
+      <div class="meta-row"><span>TARAMA</span><b id="progTxt">%0</b></div>
+      <div class="meta-bar"><i id="progBar"></i></div>
+    </div>
+    <button id="closeBtn" class="close-btn" type="button" title="Kapat (ESC)">✕</button>
+  </div>
+
+  <div class="stage" id="stage">
+
+    <!-- bağlantı telleri -->
+    <svg class="wires" id="wires" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"></svg>
+
+    <!-- SOL ETİKET SÜTUNU -->
+    <div class="col col-left" id="colLeft"></div>
+
+    <!-- DENEK / SPESİMEN -->
+    <div class="specimen" id="specimen">
+      <div class="chamber">
+        <span class="corner tl"></span><span class="corner tr"></span>
+        <span class="corner bl"></span><span class="corner br"></span>
+
+        <!-- KAFA KAPSÜLÜ: fotoğrafın katmanlara ayrıldığı yer -->
+        <div class="capsule" id="capsule">
+          <div class="layer l-skin"   data-cap="EPİDERMİS"><img alt=""></div>
+          <div class="layer l-muscle" data-cap="KAS DOKUSU"><img alt=""></div>
+          <div class="layer l-nerve"  data-cap="SİNİR AĞI"><img alt=""></div>
+          <div class="layer l-xray"   data-cap="X-RAY"><img alt="Denek röntgeni"></div>
+          <div class="cap-frame"></div>
+          <div class="cap-grid"></div>
+        </div>
+
+        <!-- İSKELET -->
+        <svg class="skeleton" id="skeleton" viewBox="0 0 200 330" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+          <g class="bone-grp" data-part="spine">
+            <path d="M100,0 L100,152"/>
+            <path d="M92,22 H108 M92,34 H108 M92,46 H108 M92,58 H108 M92,70 H108 M92,82 H108 M92,94 H108 M92,106 H108 M92,118 H108 M92,130 H108 M92,142 H108"/>
+          </g>
+          <g class="bone-grp" data-part="ribs">
+            <path d="M100,12 L68,6 M100,12 L132,6"/>
+            <path d="M99,26 C78,26 64,38 68,54"/>
+            <path d="M99,40 C74,40 58,53 62,71"/>
+            <path d="M99,54 C72,54 55,68 60,88"/>
+            <path d="M99,68 C74,68 58,83 64,103"/>
+            <path d="M99,82 C78,82 64,96 70,114"/>
+            <path d="M101,26 C122,26 136,38 132,54"/>
+            <path d="M101,40 C126,40 142,53 138,71"/>
+            <path d="M101,54 C128,54 145,68 140,88"/>
+            <path d="M101,68 C126,68 142,83 136,103"/>
+            <path d="M101,82 C122,82 136,96 130,114"/>
+          </g>
+          <g class="bone-grp" data-part="arm-l">
+            <path d="M68,8 L50,78"/><path d="M50,78 L38,140"/><path d="M44,78 L32,138"/>
+            <path d="M35,142 l-6,10 m6,-10 l0,12 m0,-12 l6,10 m-9,-12 l-7,7"/>
+          </g>
+          <g class="bone-grp" data-part="arm-r">
+            <path d="M132,8 L150,78"/><path d="M150,78 L162,140"/><path d="M156,78 L168,138"/>
+            <path d="M165,142 l6,10 m-6,-10 l0,12 m0,-12 l-6,10 m9,-12 l7,7"/>
+          </g>
+          <g class="bone-grp" data-part="pelvis">
+            <path d="M100,152 C80,152 66,162 68,180 C70,194 84,200 94,194 L100,188 L106,194 C116,200 130,194 132,180 C134,162 120,152 100,152 Z"/>
+          </g>
+          <g class="bone-grp" data-part="leg-l">
+            <path d="M86,194 L78,252"/><path d="M78,252 L74,308"/><path d="M84,254 L80,306"/>
+            <path d="M74,308 L62,318 L78,318 Z"/>
+          </g>
+          <g class="bone-grp" data-part="leg-r">
+            <path d="M114,194 L122,252"/><path d="M122,252 L126,308"/><path d="M116,254 L120,306"/>
+            <path d="M126,308 L138,318 L122,318 Z"/>
+          </g>
+          <g class="organ" data-organ="heart">
+            <path d="M92,60 c-4,-6 -13,-2 -13,5 c0,8 9,13 13,16 c4,-3 13,-8 13,-16 c0,-7 -9,-11 -13,-5 Z"/>
+          </g>
+        </svg>
+
+        <!-- efektler -->
+        <div class="hotspots" id="hotspots"></div>
+        <div class="scanbeam" id="scanbeam"></div>
+        <div class="chamber-noise"></div>
+        <div class="stamp" id="stamp">TARAMA TAMAMLANDI</div>
+      </div>
+
+      <div class="ekg">
+        <svg viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+          <polyline points="0,20 40,20 46,20 52,6 58,34 64,20 90,20 96,16 102,24 108,20 150,20 156,20 162,6 168,34 174,20 200,20 206,16 212,24 218,20 300,20"/>
+        </svg>
+        <span class="bpm"><b id="bpm">72</b> BPM</span>
+      </div>
+    </div>
+
+    <!-- SAĞ ETİKET SÜTUNU -->
+    <div class="col col-right" id="colRight"></div>
+  </div>
+
+  <!-- ══ İSTATİSTİKLER ══ -->
+  <div class="panel stats-panel">
+    <h3 class="panel-title"><span>◈</span> BİYOMETRİK ÖLÇÜMLER</h3>
+    <div class="stats" id="stats"></div>
+  </div>
+
+  <!-- ══ TEŞHİS ══ -->
+  <div class="panel verdict-panel" id="verdictPanel">
+    <h3 class="panel-title"><span>✚</span> TEŞHİS</h3>
+    <p class="verdict" id="verdict"></p>
+    <div class="verdict-actions">
+      <button class="btn" id="dlBtn" type="button">⤓ RAPORU İNDİR (.pdf)</button>
+      <button class="btn btn-ghost" id="otherBtn" type="button">↺ DİĞER DENEK</button>
+    </div>
+    <div class="dl-wrap" id="dlWrap" hidden>
+      <div class="dl-bar"><i id="dlBar"></i></div>
+      <p class="dl-txt" id="dlTxt">rapor hazırlanıyor...</p>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  bu site tamamen şaka amaçlıdır &nbsp;•&nbsp; tıbbi tavsiye değildir &nbsp;•&nbsp; kediye bulaşmayın 🐈‍⬛
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

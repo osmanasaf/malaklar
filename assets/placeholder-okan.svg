@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#04170f"/><stop offset="1" stop-color="#03080a"/>
+    </linearGradient>
+    <linearGradient id="sil" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#45ff9f" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#45ff9f" stop-opacity=".12"/>
+    </linearGradient>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0V20" fill="none" stroke="#45ff9f" stroke-opacity=".12"/>
+    </pattern>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg)"/>
+  <rect width="400" height="400" fill="url(#grid)"/>
+  <circle cx="200" cy="196" r="128" fill="none" stroke="#45ff9f" stroke-opacity=".22" stroke-dasharray="6 10"/>
+  <g fill="url(#sil)" stroke="#45ff9f" stroke-opacity=".5" stroke-width="2">
+    <path d="M200 96c34 0 56 26 56 62 0 26-8 44-18 56 24 10 42 22 54 38 14 19 22 42 26 68H82c4-26 12-49 26-68 12-16 30-28 54-38-10-12-18-30-18-56 0-36 22-62 56-62Z"/>
+    <path d="M144 152c0-40 24-60 56-60s56 20 56 60c0 10-2 18-4 24-4-22-16-36-34-42-14 12-38 16-62 14-8 6-10 18-8 28-2-6-4-14-4-24Z" fill="#45ff9f" fill-opacity=".3"/>
+  </g>
+  <text x="200" y="332" text-anchor="middle" font-family="monospace" font-size="17" letter-spacing="5" fill="#45ff9f" fill-opacity=".85">0KN-404</text>
+  <text x="200" y="358" text-anchor="middle" font-family="monospace" font-size="11" letter-spacing="2.5" fill="#b6ffd8" fill-opacity=".6">GÖRSEL BEKLENİYOR</text>
+  <text x="200" y="376" text-anchor="middle" font-family="monospace" font-size="10" letter-spacing="1.5" fill="#b6ffd8" fill-opacity=".38">assets/0k4n.jpg</text>
+</svg>
