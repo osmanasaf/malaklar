@@ -45,10 +45,10 @@
    ═══════════════════════════════════════════════════════════════ */
 
 window.MALAKLAR_FIREBASE = {
-  apiKey: "BURAYA_YAPISTIR",
-  authDomain: "BURAYA_YAPISTIR",
-  projectId: "BURAYA_YAPISTIR",
-  storageBucket: "BURAYA_YAPISTIR",
-  messagingSenderId: "BURAYA_YAPISTIR",
-  appId: "BURAYA_YAPISTIR"
+  apiKey: "AIzaSyBFnL6_os1962-l72GXOFGduSB3IsYB7FA",
+  authDomain: "malaklar.firebaseapp.com",
+  projectId: "malaklar",
+  storageBucket: "malaklar.firebasestorage.app",
+  messagingSenderId: "559939206941",
+  appId: "1:559939206941:web:a071f1ee2d1c26c61febf4"
 };

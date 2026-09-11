@@ -413,7 +413,7 @@ async function duvariBagla() {
   if (!kurulu) { yerelModaGec(); return; }
 
   try {
-    const s = "https://www.gstatic.com/firebasejs/10.12.2/";
+    const s = "https://www.gstatic.com/firebasejs/12.19.0/";
     const [{ initializeApp }, fs] = await Promise.all([
       import(s + "firebase-app.js"),
       import(s + "firebase-firestore.js")
