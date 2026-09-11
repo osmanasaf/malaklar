@@ -433,13 +433,17 @@ async function duvariBagla() {
           ? `ortak duvar bağlı — ${eklenenler.length} söz asılı`
           : "ortak duvar bağlı — ilk sözü sen as", "iyi");
       },
-      () => yerelModaGec("duvara bağlanılamadı — eklediğin söz sadece sende görünür")
+      (hata) => {
+        console.error("[malaklar] duvar dinlenemedi:", hata);
+        yerelModaGec("duvar okunamadı (" + (hata.code || hata.message) + ") — sözün sadece sende görünür");
+      }
     );
 
     duvaraYaz = (metin, kim) =>
       fs.addDoc(kol, { metin, kim, zaman: fs.serverTimestamp() });
-  } catch {
-    yerelModaGec("duvara bağlanılamadı — eklediğin söz sadece sende görünür");
+  } catch (hata) {
+    console.error("[malaklar] firebase yüklenemedi:", hata);
+    yerelModaGec("firebase yüklenemedi (" + (hata.code || hata.message) + ") — sözün sadece sende görünür");
   }
 }
 
@@ -474,8 +478,9 @@ $("#sozForm").addEventListener("submit", async (e) => {
     sozleriCiz();
     durumYaz("asıldı. geri alınamaz.", "iyi");
     if (seciliKim === "okan") baloncukPatlamasi(4);
-  } catch {
-    durumYaz("gitmedi. tekrar dene.", "kotu");
+  } catch (hata) {
+    console.error("[malaklar] söz gönderilemedi:", hata);
+    durumYaz("gitmedi: " + (hata.code || hata.message), "kotu");
   } finally {
     btn.disabled = false;
   }
