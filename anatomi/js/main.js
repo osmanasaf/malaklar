@@ -156,6 +156,7 @@ function buildCards(){
         <div class="card-cta"><span>TARAMAYI BAŞLAT</span><span class="arrow">➜</span></div>
       </div>`;
     const img = $("img", b);
+    if (ch.odak) b.style.setProperty("--odak-kart", ch.odak);
     resolvePhoto(ch, src => { img.src = src; });
     b.addEventListener("mouseenter", () => Snd.blip());
     b.addEventListener("click", () => {
@@ -195,6 +196,7 @@ function openLab(ch){
   el.sub.textContent  = `denek · ${ch.real} · ${ch.species}`;
 
   /* görseller */
+  el.capsule.style.setProperty("--odak", ch.odak || "center 22%");
   resolvePhoto(ch, src => $$(".layer img", el.capsule).forEach(i => { i.src = src; }));
 
   /* temizlik */
